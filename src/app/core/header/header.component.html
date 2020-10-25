@@ -1,0 +1,24 @@
+<header>
+    <nav class="navbar navbar-light bg-white">
+        <a class="navbar-brand">ALURAPIC</a>
+
+        <!-- com async | pipe, eu consigo pegar o valor do observable e trato como 'as user' ... -->
+        <div *ngIf="(user$ | async ) as user; else login">
+        <i class="fa fa-user-circle"></i>
+        <a class="mr-1">{{user.name}}</a>
+        <a (click)= "logout()">logout</a> 
+        </div>
+
+        <ng-template #login>
+            <span class="navbar-text">
+                <a [routerLink]="['']" > Please, login! </a>
+            </span>
+        </ng-template>
+
+    </nav>
+    <div class="fixed-top">
+        <ap-alert >
+                
+        </ap-alert>
+    </div>
+</header>
