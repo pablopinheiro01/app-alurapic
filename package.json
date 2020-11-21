@@ -19,11 +19,13 @@
     "@angular/platform-browser": "~10.1.2",
     "@angular/platform-browser-dynamic": "~10.1.2",
     "@angular/router": "~10.1.2",
+    "@types/stacktrace-js": "^2.0.3",
     "bootstrap": "^4.1.1",
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.1",
     "jwt-decode": "^2.2.0",
     "rxjs": "~6.6.0",
+    "stacktrace-js": "^2.0.2",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },

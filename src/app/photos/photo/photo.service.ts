@@ -1,9 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Photo } from './Photo';
 import { PhotoComment } from './photo-comment';
 
-const API = 'http://localhost:3000';
+import { environment} from './../../../environments/environment'
+
+const API = environment.ApiUrl;
 
 @Injectable({providedIn: 'root' })
 export class PhotoService {
@@ -28,7 +32,16 @@ export class PhotoService {
         formData.append('allowComments', allowComments ? 'true' : 'false');
         formData.append('imageFile', file);
 
-        return this.http.post(API + '/photos/upload', formData);
+        return this.http.post(
+            API + 
+            '/photos/upload', 
+            formData,
+            { //configuracao para habilitar a visualizao de progresso, habilitada via http
+                observe: 'events',
+                reportProgress: true
+            }
+            
+            );
     }
 
     findById( photoId: number){
@@ -49,5 +62,15 @@ export class PhotoService {
 
     removePhoto(photoId: number){
         return this.http.delete(API + '/photos/' + photoId );
+    }
+
+    like(photoId: number){
+        return this.http.post( 
+            API +'/photos/' + photoId + '/like', {}, { observe: 'response'})
+            .pipe(map(res => true)) //caso de sucesso eu consigo retornar um observable true
+            .pipe(catchError( err => {
+                // o metodo of() do pacote rxJs me retorna um observable criado na hora
+                return err.status == '304' ? of(false) : throwError(err);
+            }));
     }
 }

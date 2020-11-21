@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/auth/auth.guard';
+import { GlobalErrorComponent } from './errors/global-error/global-error.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { HomeComponent } from './home/home.component';
 import { SignUpComponent } from './home/signup/signup.component';
@@ -48,15 +49,38 @@ const routes: Routes = [
         component: PhotoListComponent,
         resolve: {
             photos: PhotoListResolver
+        },
+        data: { //posso inserir qualquer informação que eu quiser
+            title: 'TimeLine'
         }
     },
     {
         path: 'p/add', component: PhotoFormComponent,
-        canActivate: [AuthGuard] //requer autenticacao
+        canActivate: [AuthGuard], //requer autenticacao
+        data: { 
+            title: "Photo upload"
+        }
     },
     {
         path: 'p/:photoId',
-        component: PhotoDetailsComponent
+        component: PhotoDetailsComponent,
+        data: { 
+            title: 'Photo Detail'
+        }
+    },
+    {
+        path: 'not-found',
+        component: NotFoundComponent,
+        data: {
+            title: 'Page Not Found'
+        }
+    },
+    {
+        path: 'error',
+        component: GlobalErrorComponent,
+        data: {
+            title: 'Error'
+        }
     },
     {
         path: '***', component: NotFoundComponent

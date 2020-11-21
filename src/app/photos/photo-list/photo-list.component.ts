@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
+import { LoadingService } from 'src/app/shared/components/loading/loading.service';
 
 import { Photo } from '../photo/Photo';
 import { PhotoService } from '../photo/photo.service';
@@ -22,11 +23,13 @@ export class PhotoListComponent implements OnInit {
 
    //injeto a dependencia no constructor que seria o serviço photo.
   //vou destinar o constructor para injeção de dependencia
-  constructor(private activatedRoute: ActivatedRoute, private photoService: PhotoService){}
+  constructor(
+    private activatedRoute: ActivatedRoute, 
+    private photoService: PhotoService,
+    ){}
   
   //esse metodo esta no ciclo de vida do angular
   ngOnInit(): void{
-    
     //este codigo e mais rapido de ser feito porem tem um problema ao executar qualquer url no brownser, ele nao sera acionado
     //this.userName = this.activatedRoute.snapshot.params.userName;
 

@@ -2,11 +2,12 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PlatformDetectorService } from 'src/app/core/platform/platform-detector.service';
+
 import { lowerCaseValidator } from 'src/app/shared/validators/lower-case.validator';
 import { NewUser } from './new-user';
 import { SignUpService } from './signup.service';
 import { UserNotTakenValidatorService } from './user-not-taken.validator.service';
-
+import { userNamePasswordValidator } from './username-password.validator';
 @Component({
     templateUrl: './signup.component.html',
     providers: [ UserNotTakenValidatorService ]
@@ -58,6 +59,10 @@ export class SignUpComponent implements OnInit{
                         Validators.maxLength(40)
                     ]
                 ]
+            }, { 
+                //pedura no formGroup esse validador
+                //validação crossfield
+                validator: userNamePasswordValidator
             }
         );
         // foca no primeiro elemento da pagina.
@@ -66,15 +71,18 @@ export class SignUpComponent implements OnInit{
     }
 
     signup(){
-        //pega todas as propriedades e valores digitados no formulario
-        const newUser: NewUser = this.signupForm.getRawValue() as NewUser; //faz casting para o tipo NewUser
-        console.log(`este e o newUser : ${newUser}`)
-        this.signUpService
-        .signup(newUser)
-        .subscribe( 
-            () => this.router.navigate(['']),
-            err => console.log(err)
-        );
-    }
+        if( this.signupForm.invalid && !this.signupForm.pending){
 
+            //pega todas as propriedades e valores digitados no formulario
+            const newUser: NewUser = this.signupForm.getRawValue() as NewUser; //faz casting para o tipo NewUser
+            console.log(`este e o newUser : ${newUser}`)
+            this.signUpService
+            .signup(newUser)
+            .subscribe( 
+                () => this.router.navigate(['']),
+                err => console.log(err)
+                );
+        }
+    }
+            
 }

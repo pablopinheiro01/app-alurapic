@@ -1,0 +1,15 @@
+<div [ngClass]="{ 'active-menu' : isShow }">
+    <div class="menu-bar">
+        <i 
+        class="fa fa-window-close" 
+        (click)="toggle()" 
+        (keyup.space)="toggle()" 
+        tabindex="0"
+        ></i>
+        <!--consome os itens dentro do menu declarado na variavel de template no header.component.html -->
+        <ng-content>
+
+        </ng-content>
+    </div>
+    <div class="overlay" (click)="toggle()"></div>
+</div>

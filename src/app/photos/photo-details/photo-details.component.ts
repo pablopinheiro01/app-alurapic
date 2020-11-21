@@ -26,13 +26,18 @@ export class PhotoDetailsComponent implements OnInit{
     ngOnInit(): void {
         this.photoId = this.route.snapshot.params.photoId;
         this.photo$ = this.service.findById(this.photoId);
+        this.photo$.subscribe( () => {}, err => {
+            console.log(err);
+            this.router.navigate(['not-found']);
+        });
     }
 
   remove(){
       this.service.removePhoto(this.photoId)
       .subscribe( () => {
             this.alertService.success("Photo removed", true);
-            this.router.navigate(['/user', this.userService.getUserName()]);
+            //replaceUrl exclui a url anterior e no back não temos o problema de voltar para uma pagina inexistente
+            this.router.navigate(['/user', this.userService.getUserName()], { replaceUrl: true });
       },
       err => {
           console.log(err);
@@ -41,4 +46,13 @@ export class PhotoDetailsComponent implements OnInit{
       )
   }
 
+  like(photo: Photo){
+      this.service.like(photo.id)
+      .subscribe(liked => {
+          if(liked){
+              this.photo$ = this.service.findById(photo.id);
+          }
+      });
+  }
+  
 }

@@ -13,7 +13,14 @@ export class AuthGuard implements CanActivate{
          | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
 
             if(!this.userService.isLogged()){
-                this.router.navigate(['']);
+                this.router.navigate(
+                    [''],
+                    { //configuro atraves do queryParam a ultima url navegada pelo cliente para apos o login entrar na opcao correta
+                        queryParams: {
+                            fromUrl : state.url
+                        }
+                    }
+                );
                 return false;
             }
             return true;

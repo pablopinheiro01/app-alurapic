@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { PlatformDetectorService } from 'src/app/core/platform/platform-detector.service';
 
@@ -9,6 +10,8 @@ import { PlatformDetectorService } from 'src/app/core/platform/platform-detector
 })
 export class SigninComponent implements OnInit{
 
+    //propriedade para atender a configuracao passada no auth.guard recebendo a rota anterior odo usuario para retornar na opcao que o mesmo tentou acessar
+    fromUrl: string;
     //essa opção é do ReactiveFormModules
     //tenho que associar a propriedade ao formulario do component.
     loginForm: FormGroup;
@@ -21,10 +24,18 @@ export class SigninComponent implements OnInit{
         private formBuilder: FormBuilder,
         private authService: AuthService,
         private router: Router,
-        private platFormDetectorService: PlatformDetectorService
+        private platFormDetectorService: PlatformDetectorService,
+        private activatedRoute : ActivatedRoute
+        //private titleService: Title
         ){}
 
     ngOnInit(): void {
+        this.activatedRoute
+        .queryParams
+        .subscribe(params => {
+            this.fromUrl = params['fromUrl'];
+        });
+        //this.titleService.setTitle("Login");
         this.loginForm = this.formBuilder.group({
             //declarado na propriedade formControlName do formulario
             userName: ['', Validators.required],
@@ -43,7 +54,10 @@ export class SigninComponent implements OnInit{
         .authenticate(userName, password)
         .subscribe(
             //() => this.router.navigateByUrl('user/'+userName)
-            () => this.router.navigate(['user', userName]),
+            //verifico se existe uma url anterior que o usuario tentou acessar diretamente caso sim redireciono para a mesma, se nao faco oq ja estava senod feito
+            () => this.fromUrl ? this.router.navigateByUrl(this.fromUrl)
+                : this.router.navigate(['user', userName]) 
+             , 
             err => {
                 console.log(err);
                 this.loginForm.reset();
